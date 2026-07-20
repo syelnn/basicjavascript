@@ -69,7 +69,7 @@ const oldestYear = Math.min(...years);
 const bukuTerbaru = books.find(book => book.year === latestYear).title;
 const bukuTerlama = books.find(book => book.year === oldestYear).title;
 
-// Output Sesuai Tampilan PDF
+// Output
 console.log("====================");
 console.log("");
 console.log("LIBRARY DASHBOARD");
