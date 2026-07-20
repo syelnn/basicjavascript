@@ -1,6 +1,6 @@
 const cart = [
   { name: "Mouse", price: 120000, qty: 2 },
-  { name: "Keyboard", price: 250000, qty: 1 },
+  { name: "Keyboard", price: 90000, qty: 1 },
   { name: "Flashdisk", price: 90000, qty: 3 }
 ];
 
