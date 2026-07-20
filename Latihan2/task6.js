@@ -77,22 +77,3 @@ books.forEach(book => {
   console.log("--------------------");
   console.log(""); // Baris kosong jarak antar buku
 });
-
-
-// TASK 7 - STATISTIK PENULIS
-// ==========================================
-authors.forEach(author => {
-  let count = 0;
-
-  // Hint dari dokumen: lakukan pencocokan antara authors.id dan books.authorId
-  for (let i = 0; i < books.length; i++) {
-    if (books[i].authorId === author.id) {
-      count++;
-    }
-  }
-
-  // Menampilkan output sesuai yang diminta di soal
-  console.log(author.name);
-  console.log(`Jumlah Buku: ${count}`);
-  console.log(""); // Baris kosong pemisah
-});

@@ -52,6 +52,7 @@ const books = [
   }
 ];
 
+
 authors.forEach(author => {
   // Hitung jumlah buku milik author saat ini
   const authorBooks = books.filter(book => book.authorId === author.id);
