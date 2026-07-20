@@ -34,7 +34,7 @@ for (let i = 0; i < students.length; i++) {
         tidakLulusCount++;
     }
     
-    // 3. Menambahkan skor ke total akumulasi nilai
+    // 3. Menambahkan skor ke total akumulasi nilai // +=nilai lama + nilai baru, misal 0+90
     totalSkor += student.score;
     
     // Tampilkan data per siswa

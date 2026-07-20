@@ -18,4 +18,4 @@ console.log("Hobi:");
 
 console.log("1. " + student.hobi[0]);
 console.log("2. " + student.hobi[1]);
-console.log("3. " + student.hobi[2]);
+ 
