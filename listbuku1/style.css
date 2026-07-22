@@ -109,3 +109,35 @@ li:hover {
 li:hover::before {
     width: 10px; 
 }
+
+/* Tambahan tata letak item list dan tombol aksi */
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tombol-box {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-edit {
+    background-color: #eab308; /* Warna Kuning */
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.btn-edit:hover {
+    background-color: #ca8a04;
+}
+
+.btn-hapus {
+    background-color: #ef4444; /* Warna Merah */
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.btn-hapus:hover {
+    background-color: #dc2626;
+}
