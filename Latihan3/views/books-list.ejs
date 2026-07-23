@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Khusus Buku</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- Navbar -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-slate-800 pb-6">
+      <a href="/" class="text-2xl font-bold text-white">Menu Buku</a>
+      <div class="flex gap-2">
+        <a href="/" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-semibold border border-slate-700">Semua Data</a>
+        <a href="/books" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold shadow">Buku</a>
+        <a href="/authors" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-semibold border border-slate-700">Author</a>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-bold text-indigo-400">Daftar Judul Buku</h2>
+    
+    </div>
+
+    <!-- Tampilan Judul Buku + Edit & Hapus -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <% books.forEach((book, index) => { %>
+        <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-xs bg-indigo-500/20 text-indigo-300 font-bold px-2.5 py-1 rounded-lg"><%= index + 1 %></span>
+            <h3 class="text-base font-semibold text-white"><%= book.title %></h3>
+          </div>
+          <div class="flex gap-2">
+            
+            <form action="/books/<%= book.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Hapus buku ini?')">
+              <button type="submit" class="px-3 py-1 bg-rose-500/10 text-rose-400 rounded text-xs font-semibold hover:bg-rose-500/20 border border-rose-500/20">Hapus</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>
