@@ -29,6 +29,12 @@ app.get('/api/books/:id', (req, res) => {
   if (!book) return res.status(404).json({ success: false, message: "Buku tidak ditemukan" });
   res.json({ success: true, data: book });
 });
+// GET: Ambil author berdasarkan ID
+app.get('/api/authors/:id', (req, res) => {
+  const author = authors.find(a => a.id === parseInt(req.params.id));
+  if (!author) return res.status(404).json({ success: false, message: "Author tidak ditemukan" });
+  res.json({ success: true, data: author });
+});
 
 // POST: Tambah buku baru
 app.post('/api/books', (req, res) => {
