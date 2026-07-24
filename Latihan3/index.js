@@ -22,19 +22,52 @@ let authors = [
 ];
 
 
-// Halaman Utama (Tampil Semua Data)
+// ==========================================================
+// 1. TAMBAHAN API ENDPOINT (Agar muncul di Network DevTools)
+// ==========================================================
+
+// Dipanggil oleh fetch('/api/books') di Frontend
+app.get('/api/books', (req, res) => {
+  res.json(books);
+});
+
+// Dipanggil oleh fetch('/api/authors') di Frontend
+app.get('/api/authors', (req, res) => {
+  res.json(authors);
+});
+
+// Dipanggil oleh fetch('/api/books/1', { method: 'DELETE' }) di Frontend
+app.delete('/api/books/:id', (req, res) => {
+  const bookId = parseInt(req.params.id);
+  books = books.filter(b => b.id !== bookId);
+  res.json({ success: true, message: "Buku berhasil dihapus" });
+});
+
+// Dipanggil oleh fetch('/api/authors/1', { method: 'DELETE' }) di Frontend
+app.delete('/api/authors/:id', (req, res) => {
+  const authorId = parseInt(req.params.id);
+  authors = authors.filter(a => a.id !== authorId);
+  res.json({ success: true, message: "Author berhasil dihapus" });
+});
+
+
+// ==========================================================
+// 2. ROUTE TAMPILAN HALAMAN (Tidak perlu kirim data EJS lagi)
+// ==========================================================
+
+// Halaman Utama
 app.get('/', (req, res) => {
-  res.render('index', { books, authors });
+  res.render('index'); // Tidak perlu { books, authors } lagi
 });
 
-// Tampilan Khusus Buku (http://localhost:3000/books)
+// Tampilan Khusus Buku
 app.get('/books', (req, res) => {
-  res.render('books-list', { books, authors });
+  res.render('books-list');
 });
 
-// Tampilan Khusus Author (http://localhost:3000/authors)
+// Tampilan Khusus Author
 app.get('/authors', (req, res) => {
-  res.render('authors', { authors });
+  res.render('authors');
 });
 
 // Halaman Form Tambah Buku
@@ -55,13 +88,15 @@ app.get('/edit', (req, res) => {
 });
 
 
+// ==========================================================
+// 3. PROSES FORM (POST & PUT dari Halaman Tambah & Edit)
+// ==========================================================
 
-// --- PROSES TAMBAH BUKU ---
+// Proses Tambah Buku
 app.post('/books', (req, res) => {
   const { title, authorName, genre } = req.body;
   if (!title || !authorName) return res.status(400).send("Judul dan Penulis wajib diisi");
 
-  // Otomatis cari atau buat author baru
   let author = authors.find(a => a.name.toLowerCase() === authorName.trim().toLowerCase());
   if (!author) {
     author = {
@@ -79,10 +114,10 @@ app.post('/books', (req, res) => {
   };
 
   books.push(newBook);
-  res.redirect('/'); // Redirect ke Halaman Utama (index.ejs)
+  res.redirect('/');
 });
 
-// --- PROSES EDIT BUKU ---
+// Proses Edit Buku
 app.put('/books/:id', (req, res) => {
   const bookId = parseInt(req.params.id);
   const { title, authorName, genre } = req.body;
@@ -105,21 +140,7 @@ app.put('/books/:id', (req, res) => {
       authorId: author.id 
     };
   }
-  res.redirect('/'); // Redirect ke Halaman Utama (index.ejs)
-});
-
-// --- PROSES HAPUS BUKU ---
-app.delete('/books/:id', (req, res) => {
-  const bookId = parseInt(req.params.id);
-  books = books.filter(b => b.id !== bookId);
-  res.redirect('/'); // Redirect ke Halaman Utama (index.ejs)
-});
-
-// --- PROSES HAPUS AUTHOR ---
-app.delete('/authors/:id', (req, res) => {
-  const authorId = parseInt(req.params.id);
-  authors = authors.filter(a => a.id !== authorId);
-  res.redirect('/'); // Redirect ke Halaman Utama (index.ejs)
+  res.redirect('/');
 });
 
 // Server Run

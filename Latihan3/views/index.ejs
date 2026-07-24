@@ -26,47 +26,84 @@
       </a>
     </div>
 
-    <% 
-      const authorMap = {};
-      authors.forEach(a => authorMap[a.id] = a.name);
-    %>
-
     <!-- List Semua Data Dalam 1 Kartu / 1 Kolom -->
     <section class="space-y-4">
       <h2 class="text-xl font-bold mb-4 text-indigo-400">Semua Data Buku</h2>
       
-      <div class="grid grid-cols-1 gap-3">
-        <% books.forEach(book => { %>
+      <!-- Wadah yang akan diisi oleh JavaScript -->
+      <div id="book-list" class="grid grid-cols-1 gap-3">
+        <p class="text-slate-400 italic">Memuat data dari API...</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Script Fetch agar Request muncul di Tab Network Inspect Element -->
+  <script>
+    Promise.all([
+      fetch('/api/books').then(res => res.json()),
+      fetch('/api/authors').then(res => res.json())
+    ])
+    .then(([books, authors]) => {
+      // Peta Author ID -> Nama
+      const authorMap = {};
+      authors.forEach(a => authorMap[a.id] = a.name);
+
+      const listContainer = document.getElementById('book-list');
+      listContainer.innerHTML = '';
+
+      if (books.length === 0) {
+        listContainer.innerHTML = '<p class="text-slate-400">Belum ada data buku.</p>';
+        return;
+      }
+
+      books.forEach(book => {
+        const authorName = authorMap[book.authorId] || 'Tidak diketahui';
+        
+        listContainer.innerHTML += `
           <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <!-- Informasi Gabungan (Buku, Penulis, Genre dalam 1 Baris / Kolom) -->
+            <!-- Informasi Gabungan -->
             <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
               <div>
                 <span class="text-xs text-slate-400">Judul Buku:</span>
-                <p class="font-bold text-white text-base"><%= book.title %></p>
+                <p class="font-bold text-white text-base">${book.title}</p>
               </div>
               <div class="hidden md:block text-slate-600">|</div>
               <div>
                 <span class="text-xs text-slate-400">Penulis:</span>
-                <p class="font-medium text-indigo-300 text-sm"><%= authorMap[book.authorId] || 'Tidak diketahui' %></p>
+                <p class="font-medium text-indigo-300 text-sm">${authorName}</p>
               </div>
               <div class="hidden md:block text-slate-600">|</div>
               <div>
                 <span class="text-xs text-slate-400">Genre:</span>
-                <p class="font-medium text-emerald-400 text-sm"><%= book.genre %></p>
+                <p class="font-medium text-emerald-400 text-sm">${book.genre}</p>
               </div>
             </div>
 
-            <!-- Tombol Action (Edit & Hapus) -->
+            <!-- Tombol Action -->
             <div class="flex gap-2 justify-end border-t border-slate-700/50 md:border-t-0 pt-3 md:pt-0">
-              <a href="/edit?id=<%= book.id %>" class="px-3 py-1.5 bg-amber-500/10 text-amber-400 rounded text-xs font-semibold hover:bg-amber-500/20 border border-amber-500/20">Edit</a>
-              <form action="/books/<%= book.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Hapus buku ini?')">
-                <button type="submit" class="px-3 py-1.5 bg-rose-500/10 text-rose-400 rounded text-xs font-semibold hover:bg-rose-500/20 border border-rose-500/20">Hapus</button>
-              </form>
+              <a href="/edit?id=${book.id}" class="px-3 py-1.5 bg-amber-500/10 text-amber-400 rounded text-xs font-semibold hover:bg-amber-500/20 border border-amber-500/20">Edit</a>
+              <button onclick="deleteBook(${book.id})" class="px-3 py-1.5 bg-rose-500/10 text-rose-400 rounded text-xs font-semibold hover:bg-rose-500/20 border border-rose-500/20">Hapus</button>
             </div>
           </div>
-        <% }) %>
-      </div>
-    </section>
-  </div>
+        `;
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById('book-list').innerHTML = '<p class="text-rose-400">Gagal mengambil data dari API.</p>';
+    });
+
+    // Fungsi Hapus Buku via Fetch API
+    async function deleteBook(id) {
+      if (!confirm('Hapus buku ini?')) return;
+      
+      const res = await fetch(`/api/books/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        alert('Gagal menghapus data');
+      }
+    }
+  </script>
 </body>
 </html>

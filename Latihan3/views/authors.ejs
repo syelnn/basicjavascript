@@ -21,25 +21,41 @@
 
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-xl font-bold text-purple-400">Daftar Nama Author</h2>
-    
     </div>
 
-    <!-- Tampilan Nama Author + Edit & Hapus -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-      <% authors.forEach((author, index) => { %>
-        <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl flex items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <span class="text-xs bg-purple-500/20 text-purple-300 font-bold px-2.5 py-1 rounded-lg"><%= index + 1 %></span>
-            <h3 class="text-base font-semibold text-white"><%= author.name %></h3>
-          </div>
-          <div class="flex gap-2">
-            <form action="/authors/<%= author.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Hapus author ini?')">
-              <button type="submit" class="px-3 py-1 bg-rose-500/10 text-rose-400 rounded text-xs font-semibold hover:bg-rose-500/20 border border-rose-500/20">Hapus</button>
-            </form>
-          </div>
-        </div>
-      <% }) %>
+    <!-- Tampilan Nama Author -->
+    <div id="authors-container" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <p class="text-slate-400 italic">Memuat data author...</p>
     </div>
   </div>
+
+  <script>
+    fetch('/api/authors')
+      .then(res => res.json())
+      .then(authors => {
+        const container = document.getElementById('authors-container');
+        container.innerHTML = '';
+
+        authors.forEach((author, index) => {
+          container.innerHTML += `
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="text-xs bg-purple-500/20 text-purple-300 font-bold px-2.5 py-1 rounded-lg">${index + 1}</span>
+                <h3 class="text-base font-semibold text-white">${author.name}</h3>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="deleteAuthor(${author.id})" class="px-3 py-1 bg-rose-500/10 text-rose-400 rounded text-xs font-semibold hover:bg-rose-500/20 border border-rose-500/20">Hapus</button>
+              </div>
+            </div>
+          `;
+        });
+      });
+
+    async function deleteAuthor(id) {
+      if (!confirm('Hapus author ini?')) return;
+      const res = await fetch(`/api/authors/${id}`, { method: 'DELETE' });
+      if (res.ok) window.location.reload();
+    }
+  </script>
 </body>
 </html>
